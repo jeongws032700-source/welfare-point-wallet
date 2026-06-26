@@ -1,0 +1,26 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Java / Gradle
+build/
+.gradle/
+*.jar
+
+# Logs / runtime
+*.log
+backend.log
+next-*.log
+tunnel.log
+
+# OS junk
+.DS_Store
+__MACOSX/
+
+# Deploy bundle (소스에서 재생성 가능)
+mobile-bank-deploy.tgz
+
+# Env / secrets (local override)
+.env
+.env.local
