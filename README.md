@@ -54,5 +54,3 @@ if (r.amount().compareTo(new BigDecimal("1000")) < 0) {
 - 문제: 포인트를 충전/사용한 직후에도 지갑 조회 화면에 이전 잔액이 잠시 그대로 노출되는 데이터 불일치가 발생했다.
 - 원인: 백엔드 `BankService.account()`가 `cache:account:{userId}`(TTL 30초) Redis 캐시를 먼저 읽는데, 잔액 변경 후 이 캐시를 지우지 않으면 TTL이 만료될 때까지 옛 값이 응답되었다.
 - 해결: `deposit/withdraw/transfer/multiTransfer` 트랜잭션 종료 시점에 `redis.evictAccount(userId)`로 해당 캐시를 즉시 무효화(Eviction)하고, 프론트는 React Query의 `invalidateQueries`로 재조회하도록 연동해 변경 즉시 최신 잔액이 반영되게 했다. (실측: 조회 시 `cache:account:2` 생성 → 충전 후 키 삭제 확인)
-
-추가로 1GB VM 환경에서는 빌드와 실행 중 메모리가 부족할 수 있어 스왑을 활용하고, 백엔드/프론트 빌드는 순차적으로 진행하는 방식으로 안정성을 확보했다.
